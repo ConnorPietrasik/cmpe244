@@ -8,7 +8,7 @@ lgpio.gpio_claim_input(h, INPIN)
 
 try:
 	while True:
-		if gpio_read(h, INPIN) > 0:
+		if lgpio.gpio_read(h, INPIN) > 0:
 			print("1\n")
 		else:
 			print("0\n")
