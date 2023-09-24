@@ -12,6 +12,7 @@ try:
 			print("1\n")
 		else:
 			print("0\n")
+		time.sleep(0.5)
 		
 except KeyboardInterrupt:
 	lgpio.gpio_free(h, INPIN)
