@@ -1,6 +1,8 @@
 import time
 import lgpio
 
+#CONNOR PIETRASIK 015126007
+
 LED = 17
 
 h = lgpio.gpiochip_open(0)

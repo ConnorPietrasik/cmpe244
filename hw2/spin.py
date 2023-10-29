@@ -2,7 +2,7 @@ import lgpio
 import sys
 #Connor Pietrasik 015126007
 
-PWM_OUT = 18
+PWM_OUT = 12
 
 #f_pwm expected as first argument, 1-10000
 f_pwm = 10000
@@ -19,10 +19,10 @@ lgpio.gpio_claim_output(h, PWM_OUT)
 
 try:
     while True:
-        lgpio.tx_pwm(h, 0, f_pwm, duty_cycle)
-        duty_cycle = input()
+        lgpio.tx_pwm(h, PWM_OUT, f_pwm, duty_cycle)
+        duty_cycle = int(input())
 
 except KeyboardInterrupt:
-	lgpio.tx_pwm(h, 0, 0)
+	lgpio.gpio_write(h, PWM_OUT, 0)
 	lgpio.gpio_free(h, PWM_OUT)
 	lgpio.gpiochip_close(h)
