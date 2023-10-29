@@ -20,7 +20,7 @@ lgpio.gpio_claim_output(h, PWM_OUT)
 try:
     while True:
         lgpio.tx_pwm(h, 0, f_pwm, duty_cycle)
-        duty_cycle = input()
+        duty_cycle = int(input())
 
 except KeyboardInterrupt:
 	lgpio.tx_pwm(h, 0, 0)
