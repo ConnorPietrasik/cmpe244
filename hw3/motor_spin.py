@@ -42,7 +42,7 @@ def spin_motor(clockwise = True, spin_time = 5, delay = 0.004, step_max = None, 
 def pwm_spin_motor(f_pwm = 250, clockwise = True, spin_time = 5, con0 = 17, con1 = 27, con2 = 22, con3 = 23):
     #Hz to S
     delay = 1 / f_pwm
-    spin_motor(clockwise, spin_time, delay, con0, con1, con2, con3)
+    spin_motor(clockwise=clockwise, spin_time=spin_time, delay=delay, con0=con0, con1=con1, con2=con2, con3=con3)
 
 
 
