@@ -37,6 +37,14 @@ def spin_motor(clockwise = True, spin_time = 5, delay = 0.004, step_max = None, 
     lgpio.group_free(h, con0)
     lgpio.gpiochip_close(h)
 
+#From what I can find on Google, pwm control of a stepper motor seems to be locking duty_cycle at 50 and control by frequency
+#One pulse = one step
+def pwm_spin_motor(f_pwm = 250, clockwise = True, spin_time = 5, con0 = 17, con1 = 27, con2 = 22, con3 = 23):
+    #Hz to S
+    delay = 1 / f_pwm
+    spin_motor(clockwise, spin_time, delay, con0, con1, con2, con3)
+
+
 
 spin_motor()
 spin_motor(False)
