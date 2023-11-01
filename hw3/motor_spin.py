@@ -7,9 +7,9 @@ OUT2 = 27
 OUT3 = 22
 OUT4 = 23
 
-delay = 0.1
+delay = 0.05
 
-step_max = 50
+step_max = 500
 clockwise = True
 
 pins = [OUT1, OUT2, OUT3, OUT4]
@@ -28,10 +28,6 @@ steps = [
 h = lgpio.gpiochip_open(0)
 lgpio.group_claim_output(h, [OUT1, OUT2, OUT3, OUT4])
 
-def cleanup():
-    lgpio.group_write(h, OUT1, 0)
-    lgpio.group_free(h, OUT1)
-    lgpio.gpiochip_close(h)
 
 try:
     step = 0
@@ -46,4 +42,6 @@ except KeyboardInterrupt:
     lgpio.gpiochip_close(h)
     exit(1)
 
-cleanup()
+lgpio.group_write(h, OUT1, 0)
+lgpio.group_free(h, OUT1)
+lgpio.gpiochip_close(h)
