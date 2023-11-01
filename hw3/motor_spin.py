@@ -2,7 +2,7 @@ import lgpio
 import time
 #Connor Pietrasik 015126007
 
-def spin_motor(clockwise = True, spin_time = 5, delay = 0.004, con1 = 17, con2 = 27, con3 = 22, con4 = 23):
+def spin_motor(clockwise = True, spin_time = 5, delay = 0.004, con0 = 17, con1 = 27, con2 = 22, con3 = 23):
     step_max = int(spin_time / delay) + 1
     steps = [
         0b1001,
@@ -16,22 +16,22 @@ def spin_motor(clockwise = True, spin_time = 5, delay = 0.004, con1 = 17, con2 =
     ]
 
     h = lgpio.gpiochip_open(0)
-    lgpio.group_claim_output(h, [con1, con2, con3, con4])
+    lgpio.group_claim_output(h, [con0, con1, con2, con3])
 
     try:
         step = 0
         for i in range(step_max):
-            lgpio.group_write(h, con1, steps[step])
+            lgpio.group_write(h, con0, steps[step])
             step = (step - 1) % 8 if clockwise else (step + 1) % 8
             time.sleep(delay)
     except KeyboardInterrupt:
-        lgpio.group_write(h, con1, 0)
-        lgpio.group_free(h, con1)
+        lgpio.group_write(h, con0, 0)
+        lgpio.group_free(h, con0)
         lgpio.gpiochip_close(h)
         exit(1)
 
-    lgpio.group_write(h, con1, 0)
-    lgpio.group_free(h, con1)
+    lgpio.group_write(h, con0, 0)
+    lgpio.group_free(h, con0)
     lgpio.gpiochip_close(h)
 
 
