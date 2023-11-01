@@ -37,7 +37,7 @@ def cleanup():
 try:
     step = 0
     for i in range(step_max):
-        lgpio.group_write(h, pins, steps[])
+        lgpio.group_write(h, pins, steps[step])
         step = (step - 1) % 8 if clockwise else (step + 1) % 8
         time.sleep(delay)
 except KeyboardInterrupt:
