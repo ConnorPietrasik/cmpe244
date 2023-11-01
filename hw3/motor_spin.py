@@ -30,14 +30,14 @@ h = lgpio.gpiochip_open(0)
 lgpio.group_claim_output(h, pins)
 
 def cleanup():
-    lgpio.group_write(h, pins, [0,0,0,0])
-    lgpio.group_free(h, pins)
+    lgpio.group_write(h, OUT1, [0,0,0,0])
+    lgpio.group_free(h, OUT1)
     lgpio.gpiochip_close(h)
 
 try:
     step = 0
     for i in range(step_max):
-        lgpio.group_write(h, pins, steps[step])
+        lgpio.group_write(h, OUT1, steps[step])
         step = (step - 1) % 8 if clockwise else (step + 1) % 8
         time.sleep(delay)
 except KeyboardInterrupt:
