@@ -2,7 +2,7 @@ import lgpio
 import time
 #Connor Pietrasik 015126007
 
-def spin_motor(clockwise = True, spin_time = 5, delay = 0.008, con1 = 17, con2 = 27, con3 = 22, con4 = 23):
+def spin_motor(clockwise = True, spin_time = 5, delay = 0.004, con1 = 17, con2 = 27, con3 = 22, con4 = 23):
     step_max = int(spin_time / delay) + 1
     steps = [
         0b1001,
