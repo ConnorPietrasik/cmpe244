@@ -2,10 +2,10 @@ import lgpio
 import time
 #Connor Pietrasik 015126007
 
-OUT1 = 25
-OUT2 = 8
-OUT3 = 7
-OUT4 = 1
+OUT1 = 17
+OUT2 = 27
+OUT3 = 22
+OUT4 = 23
 
 delay = 0.2
 
