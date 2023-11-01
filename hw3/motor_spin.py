@@ -5,14 +5,14 @@ import time
 def spin_motor(clockwise = True, spin_time = 5, delay = 0.004, con0 = 17, con1 = 27, con2 = 22, con3 = 23):
     step_max = int(spin_time / delay) + 1
     steps = [
-        0b1001,
         0b1000,
         0b1100,
         0b0100,
         0b0110,
         0b0010,
         0b0011,
-        0b0001
+        0b0001,
+        0b1001
     ]
 
     h = lgpio.gpiochip_open(0)
