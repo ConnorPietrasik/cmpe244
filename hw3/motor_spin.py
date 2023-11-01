@@ -7,7 +7,7 @@ OUT2 = 27
 OUT3 = 22
 OUT4 = 23
 
-delay = 0.2
+delay = 0.1
 
 step_max = 50
 clockwise = True
@@ -40,6 +40,10 @@ try:
         step = (step - 1) % 8 if clockwise else (step + 1) % 8
         time.sleep(delay)
 except KeyboardInterrupt:
-     cleanup()
+    #cleanup(h)
+    lgpio.group_write(h, OUT1, 0)
+    lgpio.group_free(h, OUT1)
+    lgpio.gpiochip_close(h)
+    exit(1)
 
 cleanup()
