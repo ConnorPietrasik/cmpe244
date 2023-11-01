@@ -7,12 +7,10 @@ OUT2 = 27
 OUT3 = 22
 OUT4 = 23
 
-delay = 0.05
+delay = 0.008
 
-step_max = 500
+step_max = 2000
 clockwise = True
-
-pins = [OUT1, OUT2, OUT3, OUT4]
 
 steps = [
     0b1001,
