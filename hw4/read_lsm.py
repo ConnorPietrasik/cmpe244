@@ -5,20 +5,24 @@ from time import sleep
 ADDRESS_MAG = 0x1E
 ADDRESS_ACCEL = 0x19
 
-REG_WHO_M = 0x4F
+REG_MAG_WHO = 0x4F
+REG_MAG_CFG_A = 0x60
 
-REG_MAG_X_H = 0x69
-REG_MAG_Y_H = 0x6B
-REG_MAG_Z_H = 0x6D
+REG_MAG_X_L = 0x6
+REG_MAG_Y_L = 0x6A
+REG_MAG_Z_L = 0x6C
 
 h = lgpio.i2c_open(1, 0x1E)
+
+#0 = 10Hz continuous mode
+lgpio.i2c_write_byte_data(h, REG_MAG_CFG_A, 0)
 
 
 while True:
     try:
-        x = lgpio.i2c_read_byte_data(h, REG_MAG_X_H)
-        y = lgpio.i2c_read_byte_data(h, REG_MAG_Y_H)
-        z = lgpio.i2c_read_byte_data(h, REG_MAG_Z_H)
+        x = lgpio.i2c_read_word_data(h, REG_MAG_X_L)
+        y = lgpio.i2c_read_word_data(h, REG_MAG_Y_L)
+        z = lgpio.i2c_read_word_data(h, REG_MAG_Z_L)
         print(f"X: { x }\tY: { y }\tZ: { z }")
         sleep(0.5)
     except KeyboardInterrupt:
