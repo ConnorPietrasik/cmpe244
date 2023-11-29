@@ -68,6 +68,7 @@ def spin_check_deg(degree, clockwise = True):
     print(f"{degree} degrees = {steps} steps")
 
     spin_motor(clockwise, 0.004, steps)
+    sleep(0.2) #let the sensor settle
 
     x = lgpio.i2c_read_byte_data(h, REG_MAG_X_L)
     y = lgpio.i2c_read_byte_data(h, REG_MAG_Y_L)
@@ -80,4 +81,6 @@ def spin_check_deg(degree, clockwise = True):
 
 
 spin_check_deg(15)
+print()
+sleep(0.2)
 spin_check_deg(15, False)
