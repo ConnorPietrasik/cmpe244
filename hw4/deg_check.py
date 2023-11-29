@@ -77,3 +77,7 @@ def spin_check_deg(degree, clockwise = True):
     print(f"Calculated angle: {degrees(atan2(y, x))}")
 
     lgpio.i2c_close(h)
+
+
+spin_check_deg(15)
+spin_check_deg(15, False)
