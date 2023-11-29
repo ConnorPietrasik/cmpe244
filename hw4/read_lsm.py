@@ -12,7 +12,7 @@ REG_MAG_X_L = 0x68
 REG_MAG_Y_L = 0x6A
 REG_MAG_Z_L = 0x6C
 
-h = lgpio.i2c_open(1, 0x1E)
+h = lgpio.i2c_open(1, ADDRESS_MAG)
 
 #0 = 10Hz continuous mode
 lgpio.i2c_write_byte_data(h, REG_MAG_CFG_A, 0)
