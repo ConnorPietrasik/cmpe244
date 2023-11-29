@@ -1,6 +1,7 @@
 import lgpio
 from time import sleep
 from math import atan2, degrees
+import numpy as np
 #Connor Pietrasik 015126007
 
 #step_max overrides spin_time if set, otherwise calculated based on spin_time and delay
@@ -75,7 +76,11 @@ def spin_check_deg(degree, clockwise = True):
     z = lgpio.i2c_read_byte_data(h, REG_MAG_Z_L)
     print(f"End X: { x }\tEnd Y: { y }\tEnd Z: { z }")
 
-    print(f"Calculated angle: {degrees(atan2(y, x))}")
+    vec1 = [start_x, start_y, start_z]
+    vec2 = [x, y, z]
+    calc_angle = np.arccos(np.dot(vec1,vec2)/(np.linalg.norm(vec1)*np.linalg.norm(vec2)))
+
+    print(f"Calculated angle: {calc_angle}")
 
     lgpio.i2c_close(h)
 
