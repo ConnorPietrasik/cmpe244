@@ -1,12 +1,12 @@
 import lgpio
 from time import sleep
-from math import atan2, degrees
+from math import degrees
 import numpy as np
 #Connor Pietrasik 015126007
 
-#step_max overrides spin_time if set, otherwise calculated based on spin_time and delay
+#Step_max overrides spin_time if set, otherwise calculated based on spin_time and delay
 def spin_motor(clockwise = True, delay = 0.004, step_max = 4096, con0 = 17, con1 = 27, con2 = 22, con3 = 23):
-    #half-step, so step_max = 4096 for full rotation
+    #Half-step, so step_max = 4096 for full rotation
     steps = [
         0b1001,
         0b1000,
@@ -69,18 +69,34 @@ def spin_check_deg(degree, clockwise = True):
     print(f"{degree} degrees = {steps} steps")
 
     spin_motor(clockwise, 0.004, steps)
-    sleep(0.2) #let the sensor settle
+    sleep(0.2) #Let the sensor settle
 
     x = lgpio.i2c_read_byte_data(h, REG_MAG_X_L)
     y = lgpio.i2c_read_byte_data(h, REG_MAG_Y_L)
     z = lgpio.i2c_read_byte_data(h, REG_MAG_Z_L)
     print(f"End X: { x }\tEnd Y: { y }\tEnd Z: { z }")
 
+    #It has been a while since linear algebra, so magic formula to get angle:
     vec1 = [start_x, start_y, start_z]
     vec2 = [x, y, z]
-    calc_angle = np.arccos(np.dot(vec1,vec2)/(np.linalg.norm(vec1)*np.linalg.norm(vec2)))
+    calc_angle = degrees(np.arccos(np.dot(vec1,vec2)/(np.linalg.norm(vec1)*np.linalg.norm(vec2))))
 
-    print(f"Calculated angle: {calc_angle}")
+    #I don't understand why I need this, but found it by looking for patterns in results
+    a = start_x > x
+    b = start_y > y
+    c = start_z > z
+
+    #Two greater in a row makes it doubles the result for some reason
+    c1 = a and b and not c
+    c2 = a and not b and not c
+    c3 = not a and b and c
+    c4 = not a and not b and c
+
+    if c1 or c2 or c3 or c4:
+        calc_angle /= 2
+
+
+    print(f"Calculated angle: {calc_angle} degrees")
 
     lgpio.i2c_close(h)
 
