@@ -8,7 +8,7 @@ ADDRESS_ACCEL = 0x19
 REG_MAG_WHO = 0x4F
 REG_MAG_CFG_A = 0x60
 
-REG_MAG_X_L = 0x6
+REG_MAG_X_L = 0x68
 REG_MAG_Y_L = 0x6A
 REG_MAG_Z_L = 0x6C
 
@@ -20,11 +20,11 @@ lgpio.i2c_write_byte_data(h, REG_MAG_CFG_A, 0)
 
 while True:
     try:
-        x = lgpio.i2c_read_word_data(h, REG_MAG_X_L)
-        y = lgpio.i2c_read_word_data(h, REG_MAG_Y_L)
-        z = lgpio.i2c_read_word_data(h, REG_MAG_Z_L)
+        x = lgpio.i2c_read_byte_data(h, REG_MAG_X_L)
+        y = lgpio.i2c_read_byte_data(h, REG_MAG_Y_L)
+        z = lgpio.i2c_read_byte_data(h, REG_MAG_Z_L)
         print(f"X: { x }\tY: { y }\tZ: { z }")
-        sleep(0.5)
+        sleep(5)
     except KeyboardInterrupt:
         lgpio.i2c_close(h)
         exit(1)
