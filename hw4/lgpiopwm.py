@@ -52,7 +52,7 @@ def write(h, pin, val):
 
 def init(pwm_pin):
     global enable
-    enable = True
+    enable = False
     return True
 
 def pwm(h, f_pwm, duty = 0):

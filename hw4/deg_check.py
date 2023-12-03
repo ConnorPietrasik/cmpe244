@@ -68,6 +68,9 @@ def spin_check_deg(degree, clockwise = True):
     delay = steps / PWM_FREQ
 
     h_pwm = lgpiopwm.init(PWM_PIN)
+
+    lgpiopwm.write(h, DIR_PIN, int(clockwise))
+
     lgpiopwm.pwm(h_pwm, PWM_FREQ, 50)
     sleep(delay)
     lgpiopwm.pwm(h_pwm, 0)
