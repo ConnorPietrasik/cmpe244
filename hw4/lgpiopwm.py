@@ -38,7 +38,6 @@ def spin_motor():
 def start():
     global enable, pwm_thread, clockwise
     enable = True
-    clockwise = True
     pwm_thread = Thread(target=spin_motor)
     pwm_thread.start()
 
@@ -51,8 +50,9 @@ def write(h, pin, val):
     clockwise = True if val else False
 
 def init(pwm_pin):
-    global enable
+    global enable, clockwise
     enable = False
+    clockwise = True
     return True
 
 def pwm(h, f_pwm, duty = 0):
