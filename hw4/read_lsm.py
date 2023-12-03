@@ -24,7 +24,7 @@ while True:
         y = lgpio.i2c_read_byte_data(h, REG_MAG_Y_L)
         z = lgpio.i2c_read_byte_data(h, REG_MAG_Z_L)
         print(f"X: { x }\tY: { y }\tZ: { z }")
-        sleep(5)
+        sleep(0.2)
     except KeyboardInterrupt:
         lgpio.i2c_close(h)
         exit(1)

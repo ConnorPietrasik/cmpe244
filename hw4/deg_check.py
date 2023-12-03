@@ -1,50 +1,41 @@
 import lgpio
+import lgpiopwm
 from time import sleep
 from math import degrees
 import numpy as np
 #Connor Pietrasik 015126007
 
-#Step_max overrides spin_time if set, otherwise calculated based on spin_time and delay
-def spin_motor(clockwise = True, delay = 0.004, step_max = 4096, con0 = 17, con1 = 27, con2 = 22, con3 = 23):
-    #Half-step, so step_max = 4096 for full rotation
-    steps = [
-        0b1001,
-        0b1000,
-        0b1100,
-        0b0100,
-        0b0110,
-        0b0010,
-        0b0011,
-        0b0001
-    ]
+# def spin_motor(clockwise = True, delay = 0.004, step_max = 4096, con0 = 17, con1 = 27, con2 = 22, con3 = 23):
+#     #Half-step, so step_max = 4096 for full rotation
+#     steps = [
+#         0b1001,
+#         0b1000,
+#         0b1100,
+#         0b0100,
+#         0b0110,
+#         0b0010,
+#         0b0011,
+#         0b0001
+#     ]
 
-    h = lgpio.gpiochip_open(0)
-    lgpio.group_claim_output(h, [con0, con1, con2, con3])
+#     h = lgpio.gpiochip_open(0)
+#     lgpio.group_claim_output(h, [con0, con1, con2, con3])
 
-    try:
-        step = 0
-        for i in range(step_max):
-            lgpio.group_write(h, con0, steps[step])
-            step = (step - 1) % 8 if clockwise else (step + 1) % 8
-            sleep(delay)
-    except KeyboardInterrupt:
-        lgpio.group_write(h, con0, 0)
-        lgpio.group_free(h, con0)
-        lgpio.gpiochip_close(h)
-        exit(1)
+#     try:
+#         step = 0
+#         for i in range(step_max):
+#             lgpio.group_write(h, con0, steps[step])
+#             step = (step - 1) % 8 if clockwise else (step + 1) % 8
+#             sleep(delay)
+#     except KeyboardInterrupt:
+#         lgpio.group_write(h, con0, 0)
+#         lgpio.group_free(h, con0)
+#         lgpio.gpiochip_close(h)
+#         exit(1)
 
-    lgpio.group_write(h, con0, 0)
-    lgpio.group_free(h, con0)
-    lgpio.gpiochip_close(h)
-
-#From what I can find on Google, pwm control of a stepper motor seems to be locking duty_cycle at 50 and control by frequency
-#One pulse = one step
-def pwm_spin_motor(f_pwm = 250, clockwise = True, spin_time = 5, con0 = 17, con1 = 27, con2 = 22, con3 = 23):
-    #Hz to S
-    delay = 1 / f_pwm
-    spin_motor(clockwise, spin_time, delay, None, con0, con1, con2, con3)
-
-
+#     lgpio.group_write(h, con0, 0)
+#     lgpio.group_free(h, con0)
+#     lgpio.gpiochip_close(h)
 
 def spin_check_deg(degree, clockwise = True):
     ADDRESS_MAG = 0x1E
@@ -54,6 +45,9 @@ def spin_check_deg(degree, clockwise = True):
     REG_MAG_X_L = 0x68
     REG_MAG_Y_L = 0x6A
     REG_MAG_Z_L = 0x6C
+
+    PWM_PIN = 12
+    DIR_PIN = 17
 
     h = lgpio.i2c_open(1, ADDRESS_MAG)
 
@@ -68,7 +62,12 @@ def spin_check_deg(degree, clockwise = True):
     steps = int(degree * 4096 / 360)
     print(f"{degree} degrees = {steps} steps")
 
-    spin_motor(clockwise, 0.004, steps)
+    #Steps to time before turning pwm off, 250Hz is good speed for motor
+    wait = steps / 250
+
+    lgpiopwm.pwm(h, PWM_PIN, 250, 50)
+    sleep(wait)
+    lgpiopwm.pwm(h, PWM_PIN, 0)
     sleep(0.2) #Let the sensor settle
 
     x = lgpio.i2c_read_byte_data(h, REG_MAG_X_L)
@@ -76,7 +75,7 @@ def spin_check_deg(degree, clockwise = True):
     z = lgpio.i2c_read_byte_data(h, REG_MAG_Z_L)
     print(f"End X: { x }\tEnd Y: { y }\tEnd Z: { z }")
 
-    #It has been a while since linear algebra, so magic formula to get angle:
+    #Standard formula to get angle between two vectors
     vec1 = [start_x, start_y, start_z]
     vec2 = [x, y, z]
     calc_angle = degrees(np.arccos(np.dot(vec1,vec2)/(np.linalg.norm(vec1)*np.linalg.norm(vec2))))
@@ -86,7 +85,7 @@ def spin_check_deg(degree, clockwise = True):
     b = start_y > y
     c = start_z > z
 
-    #Two greater in a row makes it doubles the result for some reason
+    #Two greater in a row makes it double the result for some reason
     c1 = a and b and not c
     c2 = a and not b and not c
     c3 = not a and b and c
