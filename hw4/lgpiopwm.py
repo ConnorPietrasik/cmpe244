@@ -55,7 +55,7 @@ def init(pwm_pin):
     clockwise = True
     return True
 
-def pwm(h, f_pwm, duty = 0):
+def pwm(h, f_pwm, duty):
     global enable, delay
     if f_pwm:
         delay = 1 / f_pwm
