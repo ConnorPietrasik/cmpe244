@@ -49,6 +49,8 @@ def spin_check_deg(degree, clockwise = True):
     PWM_PIN = 12
     DIR_PIN = 17
 
+    PWM_FREQ = 250
+
     h = lgpio.i2c_open(1, ADDRESS_MAG)
 
     #0 = 10Hz continuous mode
@@ -63,11 +65,12 @@ def spin_check_deg(degree, clockwise = True):
     print(f"{degree} degrees = {steps} steps")
 
     #Steps to time before turning pwm off, 250Hz is good speed for motor
-    wait = steps / 250
+    delay = steps / PWM_FREQ
 
-    lgpiopwm.pwm(h, PWM_PIN, 250, 50)
-    sleep(wait)
-    lgpiopwm.pwm(h, PWM_PIN, 0)
+    h_pwm = lgpiopwm.init(PWM_PIN)
+    lgpiopwm.pwm(h_pwm, PWM_FREQ, 50)
+    sleep(delay)
+    lgpiopwm.pwm(h_pwm, 0)
     sleep(0.2) #Let the sensor settle
 
     x = lgpio.i2c_read_byte_data(h, REG_MAG_X_L)

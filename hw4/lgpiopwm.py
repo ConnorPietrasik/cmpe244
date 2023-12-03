@@ -31,6 +31,9 @@ def spin_motor():
         lgpio.group_free(h, con[0])
         lgpio.gpiochip_close(h)
         exit(1)
+    lgpio.group_write(h, con[0], 0)
+    lgpio.group_free(h, con[0])
+    lgpio.gpiochip_close(h)
 
 def start():
     global enable, pwm_thread, clockwise
@@ -47,14 +50,16 @@ def write(h, pin, val):
     global clockwise
     clockwise = True if val else False
 
-def pwm(h, pwm_pin, f_pwm, duty = 0):
-    if duty and duty != 50:
-        lgpio.tx_pwm(h, pwm_pin, f_pwm, duty)
+def init(pwm_pin):
+    global enable
+    enable = True
+    return True
+
+def pwm(h, f_pwm, duty = 0):
+    global enable, delay
+    if f_pwm:
+        delay = 1 / f_pwm
+        if not enable:
+            start()
     else:
-        global enable, delay
-        if f_pwm:
-            delay = 1 / f_pwm
-            if not enable:
-                start()
-        else:
-            enable = False
+        stop()
