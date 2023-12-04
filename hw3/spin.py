@@ -12,7 +12,7 @@ if (len(sys.argv) > 1):
 #duty_cycle expected as second argument, 0-100 int for percentage
 duty_cycle = 90
 if (len(sys.argv) > 2):
-    f_pwm = int(sys.argv[2])
+    duty_cycle = int(sys.argv[2])
 
 h = lgpio.gpiochip_open(0)
 lgpio.gpio_claim_output(h, PWM_OUT)
